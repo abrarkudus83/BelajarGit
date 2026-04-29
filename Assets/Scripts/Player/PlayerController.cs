@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
     void GameOver()
     {
         Debug.Log("Player Mati");
-        GameManager.Instance.GameOver();
+        Time.timeScale = 0f;
         gameObject.SetActive(false);
     }
 }
