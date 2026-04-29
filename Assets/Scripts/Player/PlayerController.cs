@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
 
     private PlayerInput playerInput;
     private Vector2 moveInput;
+
+    // public GameManager gameManager;
 
     void Start()
     {
@@ -49,11 +52,16 @@ public class PlayerController : MonoBehaviour
         if (currentHP <= 0)
         {
             GameOver();
+            // gameManager.GameOver();
         }
     }
 
     void GameOver()
     {
+        Debug.Log("Game Over");
+        SceneManager.LoadScene("MainMenu");
+        // currentState = GameState.GameOver;
+        Time.timeScale = 1f; 
         Debug.Log("Player Mati");
         Time.timeScale = 0f;
         gameObject.SetActive(false);
