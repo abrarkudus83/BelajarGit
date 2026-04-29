@@ -3,33 +3,41 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    public float currentHP = 100;
-    public float speed = 5f;
+   [SerializeField] private PlayerData playerData;
+
+    private float currentHP;
+
     private PlayerInput playerInput;
     private Vector2 moveInput;
 
     void Start()
     {
         playerInput = GetComponent<PlayerInput>();
+
+        if (playerData != null)
+        {
+            currentHP = playerData.maxHP;
+        }
+        else
+        {
+            Debug.LogError("PlayerData belum di-assign!");
+        }
     }
-    
-    
+
     void Update()
     {
         if (playerInput == null) return;
-        
-        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
-        float h = moveInput.x;
-        float v = moveInput.y;
 
-        transform.Translate(new Vector3(h, v, 0) * speed * Time.deltaTime);
+        moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
+
+        transform.Translate(new Vector3(moveInput.x, moveInput.y, 0) * playerData.moveSpeed * Time.deltaTime);
     }
 
     void OnCollisionStay2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Wall"))
         {
-            TakeDamage(0.1f);
+            TakeDamage(10f * Time.deltaTime); 
         }
     }
 
@@ -40,7 +48,14 @@ public class PlayerController : MonoBehaviour
 
         if (currentHP <= 0)
         {
-            GameManager.Instance.GameOver();
+            GameOver();
         }
+    }
+
+    void GameOver()
+    {
+        Debug.Log("Player Mati");
+        GameManager.Instance.GameOver();
+        gameObject.SetActive(false);
     }
 }
